@@ -23,10 +23,10 @@ SRCFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 HDRFILES := $(shell find $(PROJDIRS) -type f -name "*.h")
 BINFILES := checkfs
 
-OBJFILES := $(patsubst %.cpp,%.o,$(SRCFILES))
-TSTFILES := $(patsubst %.cpp,%_t,$(SRCFILES))
+OBJFILES := $(patsubst %.c,%.o,$(SRCFILES))
+TSTFILES := $(patsubst %.c,%_t,$(SRCFILES))
 
-DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
+DEPFILES := $(patsubst %.c,%.d,$(SRCFILES))
 TSTDEPFILES := $(patsubst %,%.d,$(TSTFILES))
 
 ALLFILES := $(AUXFILES) $(SRCFILES) $(HDRFILES)
@@ -34,8 +34,8 @@ ALLFILES := $(AUXFILES) $(SRCFILES) $(HDRFILES)
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
             -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
-            -Wconversion -Wstrict-prototypes
-CPPFLAGS := -std=c99 $(WARNINGS)
+            -Wconversion -Wstrict-prototypes -Werror
+CFLAGS := -std=c99 $(WARNINGS)
 
 all: $(BINFILES)
 
@@ -50,10 +50,10 @@ testdrivers: $(TSTFILES)
 -include $(DEPFILES) $(TSTDEPFILES)
 
 %.o: %.c Makefile
-	@$(CC) $(CPPFLAGS) -Iinclude -MMD -MP -c $< -o $@
+	@$(CC) $(CFLAGS) -Iinclude -MMD -MP -c $< -o $@
 
 %_t: %.c
-	@$(CC) $(CPPFLAGS) -Iinclude -DTEST $< -o $@
+	@$(CC) $(CFLAGS) -Iinclude -DTEST $< -o $@
 
 checkfs: $(OBJFILES)
-	@$(CC) $(CPPFLAGS) -Iinclude $^ -o $@
+	@$(CC) $(CFLAGS) -Iinclude $^ -o $@

@@ -1,0 +1,11 @@
+# Binaries
+checkfs
+
+# Object files
+*.o
+
+# Test files
+*_t
+
+# Prerequisites
+*.d
